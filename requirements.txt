@@ -1,0 +1,25 @@
+# =============================================================================
+# PersonaGrid Backend Dependencies ("Antigravity" Philosophy)
+# Hardware-proximal, zero bloat: No massive ORMs, No PyTorch GPU bloat
+# =============================================================================
+
+# Server & Asynchronous Non-blocking I/O Engine
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+# uvloop for C-level event loop performance (installed on UNIX platforms)
+uvloop>=0.21.0; sys_platform != "win32"
+httptools>=0.6.4
+
+# Ultra-fast Rust-based JSON Serialization
+orjson>=3.10.11
+pydantic>=2.9.2
+
+# Zero-ORM Direct PostgreSQL Driver with Binary Protocols
+asyncpg>=0.30.0
+
+# Hardware-accelerated ONNX Vector Embedding Engine (<150MB footprint)
+# Runs BAAI/bge-small-en-v1.5 with CPU SIMD optimizations
+fastembed>=0.4.1
+
+# Environment Variable & Settings Management
+python-dotenv>=1.0.1

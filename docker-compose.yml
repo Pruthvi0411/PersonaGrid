@@ -1,0 +1,36 @@
+services:
+  # ===========================================================================
+  # PersonaGrid PostgreSQL 16+ with pgvector
+  # Hardware-proximal vector indexing (halfvec) and immutable double-entry ledger
+  # ===========================================================================
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: personagrid-db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: personagrid
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      # Auto-initializes schema, pgvector extension, HNSW indexes, and ledger triggers
+      - ./schema.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
+      - pgdata:/var/lib/postgresql/data
+    command: >
+      postgres 
+      -c shared_preload_libraries=vector
+      -c hnsw.iterative_scan=strict_order
+      -c max_connections=200
+      -c shared_buffers=256MB
+      -c work_mem=16MB
+      -c maintenance_work_mem=128MB
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d personagrid"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
+    driver: local
